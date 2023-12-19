@@ -150,7 +150,7 @@ namespace Assets.Scripts.AI.Pathfinding
             agentAvoidance.enabled = true;
 
             this.TrackedLoco = entity.gameObject.GetComponent<TrackedLocomotionAuthoring>();
-            if (!logger.RequireValid(TankLoco,
+            if (!logger.RequireValid(TrackedLoco,
                 $"[{GetType().Name} - '{entity.Code}'] '{typeof(TrackedLocomotionAuthoring).Name}' component must be attached to the unit."))
                 return;
 
