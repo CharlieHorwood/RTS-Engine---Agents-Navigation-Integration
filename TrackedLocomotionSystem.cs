@@ -70,9 +70,22 @@ public partial struct TrackedLocomotionSystem : ISystem
             // Tank should only move, if facing direction and movement direction is within certain degrees
             float3 direction = math.normalizesafe(body.Velocity);
             float3 facing = math.mul(transform.Rotation, new float3(1, 0, 0));
-            if (math.dot(direction, facing) > math.radians(10))
+
+            if (math.abs(math.dot(direction, facing)) >= math.radians(35))
             {
                 maxSpeed = 0;
+            }
+            else if (math.abs(math.dot(direction, facing)) >= math.radians(25) && math.abs(math.dot(direction, facing)) < math.radians(35))
+            {
+                maxSpeed = locomotion.Speed * 0.25f;
+            }
+            else if (math.abs(math.dot(direction, facing)) >= math.radians(15) && math.abs(math.dot(direction, facing)) < math.radians(25))
+            {
+                maxSpeed = locomotion.Speed * 0.5f;
+            }
+            else if (math.abs(math.dot(direction, facing)) >= math.radians(10) && math.abs(math.dot(direction, facing)) < math.radians(15))
+            {
+                maxSpeed = locomotion.Speed * 0.75f;
             }
 
             // Interpolate velocity
