@@ -65,9 +65,8 @@ namespace Assets.Scripts.AI.Pathfinding
 
                 currentSteering.Speed = data.speed;
                 currentSteering.Acceleration = data.acceleration;
-                //currentSteering.AngularSpeed = data.angularSpeed;
                 currentSteering.StoppingDistance = data.stoppingDistance;
-
+                currentSteering.AngularSpeed = data.angularSpeed;
                 this.WheeledLoco.EntityLocomotion = currentSteering;
 
                 var currentBody = navAgent.EntityBody;
