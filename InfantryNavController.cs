@@ -74,6 +74,7 @@ namespace Assets.Scripts.AI.Pathfinding
                 currentSteering.Speed = data.speed;
                 currentSteering.Acceleration = data.acceleration;
                 currentSteering.StoppingDistance = data.stoppingDistance;
+                currentSteering.AngularRotation = data.angularRotation;
                 navAgent.EntityLocomotion = currentSteering;
                 var currentBody = navAgent.EntityBody;
                 // If the speed value is positive and the movement was stopped (due to a game pause for example) before this assignment
