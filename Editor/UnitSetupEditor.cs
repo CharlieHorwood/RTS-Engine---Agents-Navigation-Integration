@@ -74,18 +74,16 @@ public class UnitSetupEditor : Editor
                         switch (Instance.UnitType)
                         {
                             case global::UnitType.Infantry:
-
+                                Instance.AddComponent<InfantryLocomotionAuthoring>();
                                 break;
                             case global::UnitType.Wheeled:
-                                
                                 Instance.AddComponent<WheeledLocomotionAuthoring>();
                                 break;
                             case global::UnitType.Tracked:
-                                
                                 Instance.AddComponent<TrackedLocomotionAuthoring>();
                                 break;
                             case global::UnitType.Air:
-
+                                Instance.AddComponent<AircraftLocomotionAuthoring>();
                                 break;
                         }
 
