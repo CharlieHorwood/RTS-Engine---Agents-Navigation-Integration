@@ -60,29 +60,27 @@ public partial struct WheeledLocomotionSystem : ISystem
             if (forceLength > 1)
                 body.Force = body.Force / forceLength;
 
-            // Update rotation
-            if (shape.Type == ShapeType.Circle)
-            {
-                float angle = math.atan2(body.Velocity.x, body.Velocity.y);
-                transform.Rotation = math.slerp(transform.Rotation, quaternion.RotateZ(-angle), DeltaTime * locomotion.AngularSpeed);
-            }
-            else if (shape.Type == ShapeType.Cylinder)
-            {
-                float angle = math.atan2(body.Velocity.x, body.Velocity.z);
-                transform.Rotation = math.slerp(transform.Rotation, quaternion.RotateY(angle), DeltaTime * locomotion.AngularSpeed);
-            }
             
+            const float maxVelocityMagnitudeForSteering = 3f;
+            body.Velocity = tempVelocity;
+            speedMultiplier = 1;
 
-            float3 direction = math.normalizesafe(body.Velocity);
-            float3 facing = math.mul(transform.Rotation, new float3(1, 0, 0));
+            var velocityMagnitudeForSteering = math.clamp(math.length(body.Velocity), 0, maxVelocityMagnitudeForSteering);
+            var magnitudeForSteering = velocityMagnitudeForSteering / maxVelocityMagnitudeForSteering;
+            var forwardMultiplier = math.lerp(0, 1, magnitudeForSteering);
 
-            Quaternion rotationLook = Quaternion.LookRotation(direction, facing);
-
-
-            // Interpolate velocity
-            body.Velocity = math.lerp(body.Velocity, body.Force * maxSpeed, DeltaTime * locomotion.Acceleration);
+            var directionSign = 1;
+            if (math.dot(transform.Forward(), math.normalize(body.Force)) < 0 && math.length(body.Velocity) <
+            maxVelocityMagnitudeForSteering)
+            {
+                directionSign = 1;
+            }
+            var designatedForce = directionSign * math.lerp(transform.Forward() * math.length(body.Force), body.Force, forwardMultiplier);
+            body.Velocity = math.lerp(body.Velocity, designatedForce * maxSpeed, math.saturate(DeltaTime * locomotion.Acceleration));
 
             float speed = math.length(body.Velocity);
+            float angle = math.atan2(body.Velocity.x, body.Velocity.z);
+            transform.Rotation = math.slerp(transform.Rotation, quaternion.RotateY(angle), DeltaTime * locomotion.AngularSpeed);
 
             // Early out if steps is going to be very small
             if (speed < 1e-3f)
